@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulário com Timer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* O timer agora é exibido desde o início */
+    #timer {
+      font-size: 30px;
+      font-weight: bold;
+      background-color: #761924;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+    }
+
+    /* Usa min-height para permitir que o container expanda conforme o conteúdo */
+    #formulario {
+      width: 100%;
+      max-width: 700px;
+      min-height: 600px;
+      margin-bottom: 20px;
+    }
+
+    #formulario iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    #timeout-message {
+      display: none;
+      font-size: 20px;
+      background-color: #f0f0f0;
+      color: #761924;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="timer">
+    Tempo restante: <span id="countdown">02:00</span>
+  </div>
+
+  <div id="formulario">
+    <div data-tf-live="01JRC0FH1SEB2N7B1WCZ8VT4SQ"></div>
+  </div>
+
+  <div id="timeout-message">
+    <p>O tempo acabou. O formulário foi encerrado automaticamente.</p>
+  </div>
+
+  <script src="https://embed.typeform.com/next/embed.js"></script>
+  <script>
+    const TOTAL_TEMPO = 2 * 60; // 2 minutos em segundos para a contagem ativa
+    let tempoRestante = TOTAL_TEMPO;
+    let cronometroIniciado = false;
+    let intervalo;
+    
+    const countdownEl = document.getElementById('countdown');
+    const timerEl = document.getElementById('timer');
+    const formEl = document.getElementById('formulario');
+    const timeoutEl = document.getElementById('timeout-message');
+    
+    // Função que inicia a contagem regressiva após o período de 1 minuto
+    function iniciarCronometro() {
+      if (cronometroIniciado) return;
+      cronometroIniciado = true;
+      
+      intervalo = setInterval(() => {
+        tempoRestante--;
+        
+        // Atualiza a exibição do timer
+        const minutos = String(Math.floor(tempoRestante / 60)).padStart(2, '0');
+        const segundos = String(tempoRestante % 60).padStart(2, '0');
+        countdownEl.textContent = `${minutos}:${segundos}`;
+        
+        // Alerta quando faltar exatamente 1 minuto
+        if (tempoRestante === 60) {
+          alert("Atenção: Falta 1 minuto para o fim do tempo! Por favor, submeta o formulário, pois as respostas não serão salvas automaticamente.");
+        }
+        
+        if (tempoRestante <= 0) {
+          clearInterval(intervalo);
+          formEl.style.display = 'none';
+          timeoutEl.style.display = 'block';
+        }
+      }, 1000);
+    }
+    
+    // Inicia o cronômetro somente após 1 minuto de "grace period"
+    setTimeout(iniciarCronometro, 30000);
+    
+    // Listener para capturar mensagens do Typeform (por exemplo, a submissão do formulário)
+    window.addEventListener('message', (event) => {
+      if (event.origin.indexOf('typeform.com') !== -1) {
+        if (event.data && event.data.type === 'form-submit') {
+          clearInterval(intervalo);
+          // Aqui você pode adicionar ações adicionais se necessário,
+          // como notificar o usuário ou manter o timer visível congelado.
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
+
+
