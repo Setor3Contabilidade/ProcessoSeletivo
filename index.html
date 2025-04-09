@@ -55,7 +55,7 @@
 <body>
 
   <div id="timer">
-    Tempo restante: <span id="countdown">02:00</span>
+    Tempo restante: <span id="countdown">20:00</span>
   </div>
 
   <div id="formulario">
@@ -68,7 +68,7 @@
 
   <script src="https://embed.typeform.com/next/embed.js"></script>
   <script>
-    const TOTAL_TEMPO = 2 * 60; // 2 minutos em segundos para a contagem ativa
+    const TOTAL_TEMPO = 20 * 60; // 20 minutos em segundos para a contagem ativa
     let tempoRestante = TOTAL_TEMPO;
     let cronometroIniciado = false;
     let intervalo;
@@ -104,7 +104,7 @@
       }, 1000);
     }
     
-    // Inicia o cronômetro somente após 1 minuto de "grace period"
+    // Inicia o cronômetro somente após 0,5 minuto de "grace period"
     setTimeout(iniciarCronometro, 30000);
     
     // Listener para capturar mensagens do Typeform (por exemplo, a submissão do formulário)
